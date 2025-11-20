@@ -13,7 +13,6 @@ export default function Gallery({ photos }: { photos: any[] }) {
     setMounted(true);
   }, []);
 
-  // LOGIKA KUNCI SCROLL
   useEffect(() => {
     if (selectedPhoto) {
       document.body.style.overflow = 'hidden';
@@ -45,21 +44,68 @@ export default function Gallery({ photos }: { photos: any[] }) {
       {/* 1. CAROUSEL UTAMA */}
       <PhotoCarousel photos={photos} onPhotoClick={handleOpenPhoto} />
 
+      {/* --- TANDA PETUNJUK SWIPE (FIX UKURAN KECIL) --- */}
+      <div className="flex justify-center items-center gap-3 -mt-2 mb-10 pointer-events-none select-none opacity-70">
+         
+         {/* Panah Kiri */}
+         {/* Saya kunci pakai style width/height 20px biar gak meledak gede */}
+         <svg 
+           xmlns="http://www.w3.org/2000/svg" 
+           fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
+           style={{ width: '20px', height: '20px' }}
+           className="text-neutral-400 animate-[bounce-x-left_1s_infinite]"
+         >
+           <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+         </svg>
+
+         {/* Teks Tengah */}
+         <span className="text-[10px] font-sans tracking-[0.2em] text-neutral-500 uppercase">
+           Geser / Swipe
+         </span>
+
+         {/* Panah Kanan */}
+         <svg 
+           xmlns="http://www.w3.org/2000/svg" 
+           fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
+           style={{ width: '20px', height: '20px' }}
+           className="text-neutral-400 animate-[bounce-x-right_1s_infinite]"
+         >
+           <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+         </svg>
+
+      </div>
+
+      <style jsx global>{`
+        @keyframes bounce-x-left {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(-5px); } /* Gerak dikit aja */
+        }
+        @keyframes bounce-x-right {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(5px); } /* Gerak dikit aja */
+        }
+        .animate-\[bounce-x-left_1s_infinite\] {
+          animation: bounce-x-left 1s infinite;
+        }
+        .animate-\[bounce-x-right_1s_infinite\] {
+          animation: bounce-x-right 1s infinite;
+        }
+      `}</style>
+
+
       {/* 2. POPUP (PORTAL) */}
-      {/* Kita tulis JSX-nya LANGSUNG di sini agar animasinya tidak putus */}
       {selectedPhoto && mounted && createPortal(
         <div 
           style={{
             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-            backgroundColor: '#000000', // Hitam Solid
+            backgroundColor: '#000000', 
             zIndex: 2147483647, 
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            perspective: '1500px', // Kunci efek 3D
+            perspective: '1500px', 
             userSelect: 'none'
           }}
           onClick={handleClose}
         >
-          {/* CARD CONTAINER (YANG BERPUTAR) */}
           <div 
             onClick={(e) => {
               e.stopPropagation(); 
@@ -68,11 +114,8 @@ export default function Gallery({ photos }: { photos: any[] }) {
             style={{
               position: 'relative',
               maxWidth: '90vw', maxHeight: '85vh',
-              transformStyle: 'preserve-3d', // PENTING: Menjaga elemen anak tetap 3D
-              
-              // ANIMASI TRANSISI (Ini yang bikin mulus)
-              transition: 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // Efek membal sedikit
-              
+              transformStyle: 'preserve-3d', 
+              transition: 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
               transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
               cursor: 'pointer'
             }}
@@ -80,9 +123,8 @@ export default function Gallery({ photos }: { photos: any[] }) {
             
             {/* === SISI DEPAN (FOTO) === */}
             <div style={{ 
-              backfaceVisibility: 'hidden', // Sembunyikan belakang saat depan tampil
+              backfaceVisibility: 'hidden', 
               display: 'block',
-              // Trik agar tidak kedip:
               transform: 'rotateY(0deg)' 
             }}>
               <img 
@@ -103,10 +145,7 @@ export default function Gallery({ photos }: { photos: any[] }) {
             {/* === SISI BELAKANG (PESAN) === */}
             <div style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-              
-              backfaceVisibility: 'hidden', // Sembunyikan depan saat belakang tampil
-              transform: 'rotateY(180deg)', // Balik 180 derajat biar pas muter jadi bener
-              
+              backfaceVisibility: 'hidden', transform: 'rotateY(180deg)', 
               backgroundColor: '#fffdf0', padding: '20px',
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               border: '8px solid white', borderRadius: '8px', overflowY: 'auto'
@@ -127,7 +166,7 @@ export default function Gallery({ photos }: { photos: any[] }) {
             </div>
           </div>
         </div>,
-        document.body // Render ke Body
+        document.body 
       )}
     </>
   );

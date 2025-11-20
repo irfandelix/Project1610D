@@ -2,19 +2,21 @@ import type { Metadata } from "next";
 // 1. Import Font tulisan tangan (Indie Flower)
 import { Indie_Flower, Inter } from "next/font/google";
 import "./globals.css";
-// --- TAMBAHKAN INI (IMPORT CSS SWIPER) ---
+
+// --- IMPORT CSS SWIPER (TETAP ADA) ---
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-creative';
-// ------------------------------------------
+// -------------------------------------
 
 const inter = Inter({ subsets: ["latin"] });
+
 // 2. Setup Font Estetik
 const indieFlower = Indie_Flower({ 
   weight: '400',
   subsets: ['latin'],
-  variable: '--font-handwriting', // Kita bikin variabel biar gampang dipanggil
+  variable: '--font-handwriting', 
 });
 
 export const metadata: Metadata = {
@@ -29,7 +31,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* 3. Masukkan variabel font ke body */}
+      {/* --- BAGIAN PENTING YANG KURANG TADI --- */}
+      <head>
+        {/* Kita paksa browser ambil font Digital dari sini */}
+        <link href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" rel="stylesheet" />
+      </head>
+      {/* --------------------------------------- */}
+
       <body className={`${inter.className} ${indieFlower.variable}`}>
         {children}
       </body>

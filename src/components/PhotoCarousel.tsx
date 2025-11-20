@@ -19,6 +19,15 @@ export default function PhotoCarousel({ photos, onPhotoClick }: PhotoCarouselPro
     return link.replace('=s220', '=s1000');
   };
 
+  // Fungsi untuk membersihkan nama file
+  const cleanFileName = (name: string) => {
+    // Hapus ekstensi file (misal: .jpg, .png)
+    let cleaned = name.replace(/\.[^/.]+$/, "");
+    // Ganti underscore atau strip dengan spasi, lalu kapitalisasi setiap kata
+    cleaned = cleaned.replace(/_|-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+    return cleaned;
+  };
+
   // Logika Duplikasi (Triple) agar loop mulus
   let displayPhotos = photos;
   if (photos.length > 0 && photos.length < 5) {
@@ -95,7 +104,7 @@ export default function PhotoCarousel({ photos, onPhotoClick }: PhotoCarouselPro
                   #{ (index % photos.length) + 1 }
                 </p>
                 <p className="text-sm text-gray-400 mt-2 font-sans tracking-wide uppercase">
-                   {hoveredIndex === index ? "Buka Foto" : "Angkatan 202X"}
+                   {hoveredIndex === index ? "Buka Foto" : cleanFileName(photo.name)}
                 </p>
               </div>
             </div>
